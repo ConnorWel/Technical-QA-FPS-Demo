@@ -45,8 +45,8 @@ Documentation of bugs found during black-box and exploratory testing, including 
 ### 🔴 Before Optimization: The Bottleneck
 During high-frequency weapon switching, noticeable stuttering was observed. White-box profiling revealed a significant CPU spike on the main thread.
 
-![Profiler Before Optimization](<img width="1360" height="1121" alt="Profiler_Before_Optimization" src="https://github.com/user-attachments/assets/6264487d-3f5c-47b0-be44-dbcbd9b67a4e" />)
-*(Note: Please create an 'images' folder in your repository and upload your 'before' screenshot here, updating the path if necessary)*
+<img width="1360" height="1121" alt="Profiler_Before_Optimization" src="https://github.com/user-attachments/assets/e8f52fcb-1f3d-4fee-af93-0c406dd9eebb" />
+
 
 * **Diagnosis:** The Profiler identified `PlayerLoop` execution time spiking to **~32.49ms** (dropping frame rates below 30 FPS).
 * **Root Cause Analysis:** Deep profiling pinpointed the `WeaponSwitcher.SelectWeapon()` method. Redundant synchronous operations and unoptimized iteration logic were blocking the main thread during the state transition, causing an excessive CPU load.
@@ -56,8 +56,8 @@ During high-frequency weapon switching, noticeable stuttering was observed. Whit
 ### 🟢 After Optimization: The Resolution
 The state transition logic was refactored to eliminate redundant main-thread blocking operations during weapon instantiation and activation. 
 
-![Profiler After Optimization](<img width="1360" height="1121" alt="Profiler_After_Optimization" src="https://github.com/user-attachments/assets/9cda782b-7518-4d88-ac43-275594bfb0cd" />)
-*(Note: Upload your 'after' screenshot and link it here)*
+<img width="1360" height="1121" alt="Profiler_After_Optimization" src="https://github.com/user-attachments/assets/56e6835c-7611-4693-8ee0-842dc6ac2370" />
+
 
 * **Action Taken:** Removed heavy synchronous calculations from the active `SelectWeapon` loop. Optimized the `Transform` iteration and Animator parameter synchronization to ensure lightweight execution.
 * **Result:** 
