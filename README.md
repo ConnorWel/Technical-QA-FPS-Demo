@@ -1,4 +1,4 @@
-# FPS Project: QA Testing & Performance Optimization
+# *FPS Project:* QA Testing & Performance Optimization
 
 This repository contains a custom-built 3D First-Person Shooter developed in Unity. Beyond gameplay implementation, this project serves as a showcase for Technical QA, State Machine Design, and Performance Profiling.
 
