@@ -36,4 +36,32 @@ Documentation of bugs found during black-box and exploratory testing, including 
 | **BUG-014** | Instantiated bullets freeze instantly at muzzle and fail to despawn | Physics | High | 🟢 Closed | 1. Fire weapon.<br>2. Observe bullet trajectory. | **Exp:** Bullet travels at speed 100.<br>**Act:** Bullets hang stationary permanently. |
 | **BUG-015** | Player can bypass Sprint shooting restriction by Jumping | State Machine | Medium | 🔴 Open | 1. Hold Sprint `[W]`+`[Shift]`.<br>2. Press Jump `[Space]`.<br>3. Fire weapon mid-air. | **Exp:** Cannot fire until landing.<br>**Act:** Fires mid-air, bypassing sprint lock. |
 
-> **Note:** UI Performance optimizations (Canvas separation, disabling Raycast Targets) have been implemented to maintain stable frame rates during gameplay.
+> **Note:** UI Performance optimizations (Canvas separation, disabling Raycast Targets) have been implemented to maintain stable frame rates during gameplay.‘’
+
+## 📈 4. Performance Profiling & Optimization Case Study
+
+**Objective:** Identify and resolve frame drops occurring during rapid weapon switching in combat scenarios using Unity Profiler.
+
+### 🔴 Before Optimization: The Bottleneck
+During high-frequency weapon switching, noticeable stuttering was observed. White-box profiling revealed a significant CPU spike on the main thread.
+
+![Profiler Before Optimization](<img width="1360" height="1121" alt="Profiler_Before_Optimization" src="https://github.com/user-attachments/assets/6264487d-3f5c-47b0-be44-dbcbd9b67a4e" />)
+*(Note: Please create an 'images' folder in your repository and upload your 'before' screenshot here, updating the path if necessary)*
+
+* **Diagnosis:** The Profiler identified `PlayerLoop` execution time spiking to **~32.49ms** (dropping frame rates below 30 FPS).
+* **Root Cause Analysis:** Deep profiling pinpointed the `WeaponSwitcher.SelectWeapon()` method. Redundant synchronous operations and unoptimized iteration logic were blocking the main thread during the state transition, causing an excessive CPU load.
+
+---
+
+### 🟢 After Optimization: The Resolution
+The state transition logic was refactored to eliminate redundant main-thread blocking operations during weapon instantiation and activation. 
+
+![Profiler After Optimization](<img width="1360" height="1121" alt="Profiler_After_Optimization" src="https://github.com/user-attachments/assets/9cda782b-7518-4d88-ac43-275594bfb0cd" />)
+*(Note: Upload your 'after' screenshot and link it here)*
+
+* **Action Taken:** Removed heavy synchronous calculations from the active `SelectWeapon` loop. Optimized the `Transform` iteration and Animator parameter synchronization to ensure lightweight execution.
+* **Result:** 
+    * The `SelectWeapon` method execution time was reduced from **~32ms to <1ms**.
+    * CPU spikes were completely eliminated, maintaining a stable and smooth frame rate (60+ FPS) even during rapid, consecutive weapon switching.
+    * The combat experience is now stutter-free, ensuring the Action Independence rule (from Section 1) performs flawlessly under stress.
+ 
